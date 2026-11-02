@@ -20,7 +20,12 @@ if not SECRET_KEY and DEMO_MODE:
 if not SECRET_KEY:
     raise ImproperlyConfigured("Set DJANGO_SECRET_KEY; Docker generates one for demo mode only.")
 DEBUG = flag("DJANGO_DEBUG")
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "babal-wears.vercel.app",
+    "babal-wears-bh3g.vercel.app",
+]
 CSRF_TRUSTED_ORIGINS = [x for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x]
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
