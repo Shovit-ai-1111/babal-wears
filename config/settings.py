@@ -26,6 +26,16 @@ ALLOWED_HOSTS = [
     "babal-wears.vercel.app",
     "babal-wears-bh3g.vercel.app",
 ]
+
+for variable in (
+    "VERCEL_URL",
+    "VERCEL_BRANCH_URL",
+    "VERCEL_PROJECT_PRODUCTION_URL",
+):
+    host = os.environ.get(variable, "").strip()
+    if host and host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+
 CSRF_TRUSTED_ORIGINS = [x for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x]
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
