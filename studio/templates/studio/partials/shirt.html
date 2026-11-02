@@ -1,0 +1,14 @@
+<svg class="shirt-svg" viewBox="0 0 500 560" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="shade-{{ key }}" x1="65" y1="100" x2="465" y2="450" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".21"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
+    <linearGradient id="seam-{{ key }}"><stop stop-color="#000" stop-opacity=".20"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+  </defs>
+  <g class="hanger"><path d="M250 52V30C250 20 270 20 270 8C270 -8 245 -9 242 6M250 52L133 105Q123 113 138 115H362Q377 113 367 105L250 52Z" stroke="#615F59" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="shirt-body">
+    <path d="M171 66L104 91L28 204L103 253L139 201L130 490Q250 515 370 490L361 201L397 253L472 204L396 91L329 66C305 87 288 96 250 96C212 96 195 87 171 66Z" fill="{{ color }}"/>
+    <path d="M171 66L104 91L28 204L103 253L139 201L130 490Q250 515 370 490L361 201L397 253L472 204L396 91L329 66C305 87 288 96 250 96C212 96 195 87 171 66Z" fill="url(#shade-{{ key }})"/>
+    <path d="M171 67Q250 151 329 67M141 197L153 468M359 197L347 468M134 479Q250 501 366 479M36 195L109 241M391 241L464 195" stroke="url(#seam-{{ key }})" stroke-width="3"/>
+    <path d="M179 64Q250 128 321 64" stroke="#000" stroke-opacity=".22" stroke-width="8"/>
+    <rect x="238" y="92" width="24" height="13" rx="1" fill="#E6E2D7"/><text x="250" y="101" text-anchor="middle" fill="#17191B" font-size="7" font-weight="bold">b.</text>
+  </g>
+</svg>

@@ -1,0 +1,5 @@
+{% extends 'studio/base.html' %}
+{% block title %}Outside the studio · BABAL WEARS{% endblock %}
+{% block content %}<div class="page-wrap"><header class="editorial-heading"><div><p class="eyebrow">02 / OUTSIDE THE STUDIO</p><h1 class="display medium">MORE GOOD<br><span class="outline">STUFF.</span></h1></div><p>For the rest of your wardrobe.<br>Find your thing. Slide into our DMs.</p><span class="heading-sticker" aria-hidden="true">LOOK<br>ALIVE ↗</span></header>
+<form class="catalogue-filter" action="{% url 'studio:explore' %}" method="get" hx-get="{% url 'studio:explore' %}" hx-target="#product-results" hx-push-url="true" hx-trigger="change, submit"><label for="category">Your kind of thing</label><select id="category" name="category"><option value="">Everything</option>{% for item in categories %}<option {% if category == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select><button class="text-button" type="submit">Show me ↗</button></form>
+<div id="product-results">{% include 'studio/partials/products.html' %}</div></div>{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'studio/base.html' %}
+{% load static %}
+{% block content %}
+<div class="studio" id="studio">
+  <nav class="stepper glass" aria-label="Design progress"><ol>
+    <li><button type="button" data-goto="1" aria-current="step"><b>01</b><span>Color</span></button></li>
+    <li><button type="button" data-goto="2" disabled><b>02</b><span>Print</span></button></li>
+    <li><button type="button" data-goto="3" disabled><b>03</b><span>Reveal</span></button></li>
+    <li><button type="button" data-goto="4" disabled><b>04</b><span>Details</span></button></li>
+    <li><button type="button" disabled><b>05</b><span>Done</span></button></li>
+  </ol><span class="stepper-note">A LITTLE YOU. A LOT BABAL.</span></nav>
+  <noscript><p class="message">The live T-shirt designer needs JavaScript. You can still browse <a href="{% url 'studio:explore' %}">Explore</a> or <a href="{{ dm_url }}">order through Instagram DM</a>.</p></noscript>
+  {% if not colors or not prints %}
+  <div class="empty-state glass"><h1>The rail is getting ready.</h1><p>New colors and prints are coming. Say hello to arrange a custom order.</p><a class="button dark" href="{{ dm_url }}">Open Instagram DM ↗</a></div>
+  {% else %}
+  <section class="scene color-scene is-active" data-step="1" aria-labelledby="color-title">
+    <div class="scene-copy">
+      <p class="eyebrow"><span class="status-dot"></span> THE CUSTOM TEE STUDIO</p>
+      <h1 class="display" id="color-title" tabindex="-1">MAKE IT<br><span class="outline">BABAL.</span></h1>
+      <p class="intro-text">Good taste? Yours.<br>Blank canvas? Ours.</p>
+      <div class="nepali-note"><span lang="ne">आफ्नै स्टाइल।</span><svg viewBox="0 0 120 45" aria-hidden="true"><path d="M3 9Q46 60 106 16M91 9L112 12L103 32"/></svg></div>
+      <div class="color-selection"><span class="eyebrow">01 / PICK YOUR CANVAS</span><h2 id="color-name">{{ colors.0.name }}</h2>
+        <div class="swatches" role="group" aria-label="T-shirt color">
+          {% for color in colors %}<button type="button" class="swatch" style="--swatch:{{ color.hex_code }}" data-color="{{ forloop.counter0 }}" aria-label="{{ color.name }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"><span></span></button>{% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="wardrobe-panel">
+      <div class="wardrobe-top"><span class="tiny-label">THE EVERYDAY. REMIXED.</span><span class="edition-tag">VOL. 01<br>CUSTOM CLUB</span></div>
+      <div class="rail-line" aria-hidden="true"></div>
+      <div class="wardrobe" id="wardrobe" tabindex="0" role="region" aria-label="T-shirt rail. Drag or swipe, or use left and right arrow keys.">
+        <div class="rail-track" id="rail-track">
+          {% for color in colors %}<button type="button" class="garment {% if forloop.first %}focused{% endif %}" data-shirt="{{ forloop.counter0 }}" aria-label="Choose {{ color.name }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+            {% include 'studio/partials/shirt.html' with color=color.hex_code key=forloop.counter %}
+            <span class="garment-label"><b>{{ forloop.counter|stringformat:'02d' }}</b> {{ color.name }}</span>
+          </button>{% endfor %}
+        </div>
+      </div>
+      <div class="orbit-sticker" aria-hidden="true"><span>100%<br><strong>YOUR<br>ENERGY.</strong></span><i>✳</i></div>
+      <div class="rail-bottom"><span>← DRAG TO FIND YOUR MOOD →</span><div><button type="button" class="icon-button" id="rail-prev" aria-label="Previous color">←</button><button type="button" class="icon-button" id="rail-next" aria-label="Next color">→</button></div></div>
+    </div>
+  </section>
+  <section class="scene print-scene" data-step="2" hidden aria-labelledby="print-title">
+    <div class="scene-copy"><p class="eyebrow">02 / WEAR YOUR PERSONALITY</p><h1 class="display medium" id="print-title" tabindex="-1">LESS BLANK.<br>MORE <em>YOU.</em></h1><p class="intro-text">A little loud. A little weird.<br>Exactly your kind of thing.</p>
+      <div class="print-deck" role="group" aria-label="Choose your print">
+        {% for print in prints %}<button type="button" class="print-card" data-print="{{ forloop.counter0 }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" style="--tilt:{% cycle '-5deg' '3deg' '-2deg' '5deg' %}">
+          <span class="print-index">{{ forloop.counter|stringformat:'02d' }} {% if print.is_demo %}<small>DEMO ART</small>{% endif %}</span><img src="{{ print.image.url }}" alt="{{ print.name }}" width="160" height="160" loading="lazy" decoding="async"><span class="print-name">{{ print.name }}</span>
+        </button>{% endfor %}
+      </div>
+      <p class="fine-print">Prints are uploaded by the brand. Demo art is marked.</p>
+    </div>
+    <div class="composition-panel"><div class="preview-caption"><span class="tiny-label">LIVE PREVIEW</span><span id="view-label">FRONT VIEW</span></div><div class="shirt-stage"><span class="stage-ring" aria-hidden="true"></span><canvas id="print-canvas" data-preview width="1000" height="1120" role="img" aria-label="Live T-shirt design preview"></canvas><span class="small-sticker" aria-hidden="true">GOOD<br>CHOICE ↗</span></div>
+      <div class="placement-controls glass"><fieldset><legend>Where does it go?</legend><div class="segmented"><button type="button" data-placement="chest" aria-pressed="false">Chest</button><button type="button" data-placement="center" aria-pressed="true">Center</button><button type="button" data-placement="back" aria-pressed="false">Back ↺</button></div></fieldset><label class="scale-control" for="print-scale"><span>Make some noise <output id="scale-value">100%</output></span><input type="range" id="print-scale" min="60" max="140" value="100" step="5"></label></div>
+    </div>
+  </section>
+  <section class="scene reveal-scene" data-step="3" hidden aria-labelledby="reveal-title">
+    <div class="scene-copy"><p class="eyebrow">03 / THE MAIN CHARACTER MOMENT</p><h1 class="display medium" id="reveal-title" tabindex="-1">WELL,<br>THAT'S<br><span class="outline">BABAL.</span></h1><p class="intro-text">One of one energy.<br>Made by you.</p><div class="reveal-tools"><button type="button" class="button glass" id="download-design">Save your design <span>↓</span></button><button type="button" class="button text-button" id="share-design">Send to your people ↗</button></div><p class="fine-print">Digital mockup. Garment color and print scale may vary slightly in production.</p></div>
+    <div class="reveal-art"><div class="reveal-star" aria-hidden="true">✳</div><div class="reveal-canvas-wrap"><canvas id="reveal-canvas" data-preview width="1000" height="1120" role="img" aria-label="Your completed T-shirt design"></canvas></div><div class="design-ticket glass"><div><small>DESIGNED BY</small><strong>You. Obviously.</strong></div><span id="reveal-description"></span><i aria-hidden="true">↗</i></div></div>
+  </section>
+  <section class="scene details-scene" data-step="4" hidden aria-labelledby="details-title">
+    <div class="details-heading"><p class="eyebrow">04 / LET'S MAKE IT REAL</p><h1 class="display medium" id="details-title" tabindex="-1">YOUR TEE.<br>YOUR DOOR.</h1></div>
+    <form id="order-form" method="post" action="{% url 'studio:order_create' %}" enctype="multipart/form-data" class="checkout-form glass" x-data="checkout">
+      {% csrf_token %}{{ form.submission_key }}
+      <div class="honeypot" aria-hidden="true">{{ form.website.label_tag }}{{ form.website }}</div>
+      <input type="hidden" name="color" id="order-color"><input type="hidden" name="print" id="order-print"><input type="hidden" name="placement" id="order-placement"><input type="hidden" name="print_scale" id="order-scale">
+      <div id="order-errors" class="form-errors" role="alert" tabindex="-1" hidden></div>
+      <fieldset><legend><span>01</span> The person behind the tee</legend><div class="form-grid">{% include 'studio/partials/field.html' with field=form.full_name %}{% include 'studio/partials/field.html' with field=form.instagram_username %}{% include 'studio/partials/field.html' with field=form.phone %}</div></fieldset>
+      <fieldset><legend><span>02</span> Where we're headed</legend><div class="form-grid">{% include 'studio/partials/field.html' with field=form.province %}{% include 'studio/partials/field.html' with field=form.district %}{% include 'studio/partials/field.html' with field=form.municipality %}{% include 'studio/partials/field.html' with field=form.ward %}{% include 'studio/partials/field.html' with field=form.landmark extra_class='wide' %}</div><p class="fine-print">{{ store.delivery_note }}</p></fieldset>
+      <fieldset><legend><span>03</span> The perfect fit</legend><div class="form-grid">{% include 'studio/partials/field.html' with field=form.size %}{% include 'studio/partials/field.html' with field=form.quantity %}{% include 'studio/partials/field.html' with field=form.notes extra_class='wide' %}</div><details class="size-note"><summary>Fit & size notes ↗</summary><p>{{ store.size_note }}</p></details></fieldset>
+      <fieldset><legend><span>04</span> Your way to pay</legend>
+        <div class="payment-tabs"><label><input type="radio" name="pay_timing" value="cod" x-model="timing" checked> Cash on delivery</label><label><input type="radio" name="pay_timing" value="first" x-model="timing" {% if not payment_options %}disabled{% endif %}> Pay first</label></div>
+        <input type="hidden" name="payment_method" :value="timing === 'cod' ? 'cod' : provider" value="cod">
+        <p x-show="timing === 'cod'" class="fine-print">Pay when your tee arrives. We'll confirm your order and delivery details.</p>
+        {% if not payment_options %}<p class="fine-print">Pay First will be available when the brand adds its verified payment details.</p>{% endif %}
+        <div x-show="timing === 'first'" x-cloak><div class="provider-options">{% for option in payment_options %}<label><input type="radio" name="provider_choice" value="{{ option.provider }}" x-model="provider"> {{ option.get_provider_display }}</label>{% endfor %}</div>
+          {% for option in payment_options %}<div class="payment-info" x-show="provider === '{{ option.provider }}'">{% if option.qr_image %}<img src="{{ option.qr_image.url }}" width="180" height="180" alt="{{ option.get_provider_display }} payment QR" loading="lazy">{% endif %}<div><strong>{{ option.account_name }}</strong><p>{{ option.account_number }}</p><p>{{ option.instructions }}</p></div></div>{% endfor %}
+          <label class="upload-field" for="id_payment_screenshot">Payment screenshot <small>PNG, JPEG or WebP · maximum 5 MB</small><input type="file" id="id_payment_screenshot" name="payment_screenshot" accept="image/png,image/jpeg,image/webp" :required="timing === 'first'" :disabled="timing !== 'first'"></label><p class="fine-print">A screenshot is proof for review. Payment is confirmed only after manual verification.</p>
+        </div>
+      </fieldset>
+      <label class="consent"><input type="checkbox" name="terms" required><span>I've checked my design and delivery details. My contact details may be used to fulfill this order.</span></label>
+      <button type="submit" class="button dark full-width" id="submit-order">Make it official <span>↗</span></button>
+    </form>
+    <aside class="checkout-summary glass"><span class="eyebrow">YOUR GOOD IDEA</span><img id="checkout-preview" alt="Your selected T-shirt" width="500" height="600"><h2 id="summary-design"></h2><p id="summary-placement"></p><dl><div><dt>Tee + print</dt><dd id="summary-unit"></dd></div><div><dt>Quantity</dt><dd id="summary-quantity">1</dd></div><div><dt>Delivery</dt><dd id="summary-delivery"></dd></div><div class="total"><dt>Total</dt><dd id="summary-total"></dd></div></dl><p class="fine-print">All prices in Nepali rupees (NPR). Final pricing is calculated securely at checkout.</p><button type="button" class="text-button" data-goto="2">← Tweak your design</button></aside>
+  </section>
+  <div class="journey-dock glass" id="journey-dock"><button type="button" class="back-button" id="journey-back" aria-label="Back to previous step" hidden>← Back</button><div class="dock-caption"><span id="dock-step">YOUR FIRST GOOD DECISION</span><strong id="dock-selection">{{ colors.0.name }}</strong></div><div class="dock-price"><small>YOUR CUSTOM TEE</small><strong id="dock-price"></strong></div><button type="button" class="button dark" id="journey-next">That's my color <span>↗</span></button></div>
+  {% endif %}
+</div>
+<div class="ticker" aria-hidden="true"><div>YOUR COLOR ✳ YOUR PRINT ✳ YOUR RULES ✳ आफ्नै स्टाइल ✳ YOUR COLOR ✳ YOUR PRINT ✳ YOUR RULES ✳ आफ्नै स्टाइल ✳</div></div>
+{% endblock %}
+{% block scripts %}{{ catalogue|json_script:'studio-data' }}{% endblock %}

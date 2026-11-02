@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F4F1E8">
+  <meta name="description" content="Your color. Your print. Your rules. Design your own BABAL WEARS T-shirt.">
+  <meta name="htmx-config" content='{"allowEval":false,"allowScriptTags":false,"selfRequestsOnly":true}'>
+  <title>{% block title %}Make it yours · BABAL WEARS{% endblock %}</title>
+  <link rel="icon" href="{% static 'studio/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'studio/site.css' %}">
+  <script defer src="{% static 'studio/vendor/gsap.min.js' %}"></script>
+  <script defer src="{% static 'studio/vendor/htmx.min.js' %}"></script>
+  <script defer src="{% static 'studio/app.js' %}"></script>
+  <script defer src="{% static 'studio/vendor/alpine.min.js' %}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="ambient" aria-hidden="true"><i></i><i></i></div>
+  <header class="site-header">
+    <a class="wordmark" href="{% url 'studio:designer' %}" aria-label="Babal Wears home">babal<span class="logo-star" aria-hidden="true">✳</span><small>WEARS / NEPAL</small></a>
+    <nav class="primary-nav" aria-label="Main navigation">
+      <a href="{% url 'studio:designer' %}" {% if request.resolver_match.url_name == 'designer' %}aria-current="page"{% endif %}>The studio<span>01</span></a>
+      <a href="{% url 'studio:explore' %}" {% if request.resolver_match.url_name == 'explore' %}aria-current="page"{% endif %}>Explore<span>02</span></a>
+      <a href="{% url 'studio:reviews' %}" {% if request.resolver_match.url_name == 'reviews' %}aria-current="page"{% endif %}>The people<span>03</span></a>
+    </nav>
+    <a class="header-track" href="{% url 'studio:track' %}">Track your tee <span aria-hidden="true">↗</span></a>
+  </header>
+  {% if demo_mode %}<div class="demo-strip">CONCEPT STUDIO <span>Demo artwork & prices. Replace with your approved brand catalogue.</span></div>{% endif %}
+  {% for message in messages %}<div class="message glass" role="status">{{ message }}</div>{% endfor %}
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="site-footer"><span lang="ne">बबाल लगाऊ। <span lang="en">MAKE IT YOURS.</span></span><div><a href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">@babalwears ↗</a><a href="{{ dm_url }}" target="_blank" rel="noopener noreferrer">Say hello ↗</a>{% if store.contact_phone %}<a href="tel:{{ store.contact_phone }}">{{ store.contact_phone }}</a>{% endif %}</div><span class="dhaka-thread" aria-hidden="true"></span><small>YOUR COLOR. YOUR PRINT. YOUR RULES.</small></footer>
+  <div id="cursor" aria-hidden="true">DRAG</div>
+  <div id="toast" class="toast glass" role="status" aria-live="polite"></div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

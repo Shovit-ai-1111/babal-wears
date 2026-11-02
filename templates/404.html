@@ -1,0 +1,3 @@
+{% extends 'studio/base.html' %}
+{% block title %}Off the rail · BABAL WEARS{% endblock %}
+{% block content %}<div class="page-wrap"><section class="empty-state glass"><p class="eyebrow">404 / A LITTLE OFF THE RAIL</p><h1>This one's gone missing.</h1><p>The link may have expired, or this order belongs to a different browser session. You can track an order using its ID and phone number.</p><div class="action-row"><a class="button dark" href="{% url 'studio:designer' %}">Back to the studio ↗</a><a class="button glass" href="{% url 'studio:track' %}">Track an order</a></div></section></div>{% endblock %}

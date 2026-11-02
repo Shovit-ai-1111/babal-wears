@@ -1,0 +1,9 @@
+<div id="review-form" class="review-form glass">
+  <p class="eyebrow">PASS THE MIC</p><h2>Your turn.</h2><p>The good, the great, the could-be-better.</p>
+  {% if submitted %}<p class="success-message" role="status">Thanks for the love (and the honesty). Your review will appear after moderation.</p>{% endif %}
+  <form action="{% url 'studio:review_submit' %}" method="post" enctype="multipart/form-data" hx-post="{% url 'studio:review_submit' %}" hx-target="#review-form" hx-swap="outerHTML" hx-encoding="multipart/form-data" hx-disabled-elt="find button[type='submit']">
+    {% csrf_token %}<div class="honeypot" aria-hidden="true">{{ form.website.label_tag }}{{ form.website }}</div>{{ form.non_field_errors }}
+    {% include 'studio/partials/field.html' with field=form.name %}{% include 'studio/partials/field.html' with field=form.instagram_username %}{% include 'studio/partials/field.html' with field=form.rating %}{% include 'studio/partials/field.html' with field=form.text %}{% include 'studio/partials/field.html' with field=form.photo %}
+    <label class="consent">{{ form.consent }}<span>{{ form.consent.label }}</span></label>{{ form.consent.errors }}<button type="submit" class="button dark full-width">Leave your mark ↗</button><p class="fine-print">Photo: PNG, JPEG or WebP up to 5 MB. Reviews are moderated before publication.</p>
+  </form>
+</div>

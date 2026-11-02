@@ -1,0 +1,16 @@
+.git
+.env
+.venv
+__pycache__
+*.py[cod]
+*.sqlite3
+media
+private-media
+staticfiles
+deploy/certs
+.openai
+node_modules
+*.zip
+docs/FULL_SOURCE.md
+.qa
+package.json
